@@ -27,7 +27,7 @@ async function main() {
     throw new Error("ADMIN_PASSWORD must be at least 8 characters.");
   }
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  const passwordHash = await bcrypt.hash(password, 10);
   const admin = await prisma.user.upsert({
     where: { email },
     update: { role: "ADMIN", passwordHash },
