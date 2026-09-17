@@ -1,6 +1,6 @@
-import { setupTestEnv, seedAdmin, clearTestStorage, resetTestDatabase } from "./helpers";
+import { setupTestEnv, seedAdmin, clearTestStorage, cleanDatabase } from "./helpers";
 
 setupTestEnv();
-resetTestDatabase();
+await cleanDatabase();
 await clearTestStorage();
 await seedAdmin();

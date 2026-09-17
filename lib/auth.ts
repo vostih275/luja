@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
+import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -72,6 +73,28 @@ export function setSessionCookie(response: NextResponse, token: string): NextRes
     maxAge: TOKEN_MAX_AGE_SECONDS,
   });
   return response;
+}
+
+export async function getServerUser(): Promise<SessionUser | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(TOKEN_NAME)?.value;
+  if (!token) return null;
+  try {
+    return await verifySessionToken(token);
+  } catch {
+    return null;
+  }
+}
+
+export async function requireServerAdmin(): Promise<SessionUser> {
+  const user = await getServerUser();
+  if (!user) {
+    throw new AuthError("Unauthorized", 401);
+  }
+  if (user.role !== "ADMIN") {
+    throw new AuthError("Forbidden", 403);
+  }
+  return user;
 }
 
 export function clearSessionCookie(response: NextResponse): NextResponse {

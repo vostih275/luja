@@ -23,6 +23,12 @@ export const accessGrantSchema = z.object({
   bookId: z.string().uuid(),
 });
 
+export const invitationClaimSchema = z.object({
+  token: z.string().min(32),
+  email: z.email().transform((v) => v.trim().toLowerCase()),
+  password: z.string().min(8),
+});
+
 export function sanitizeFilename(name: string): string {
   return name
     .replace(/[<>"|?*\x00-\x1f]/g, "_")

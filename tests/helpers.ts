@@ -1,4 +1,3 @@
-import { execSync } from "child_process";
 import path from "path";
 import fs from "fs/promises";
 import bcrypt from "bcryptjs";
@@ -12,6 +11,14 @@ export function setupTestEnv() {
   process.env.ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "admin@test.local";
   process.env.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "AdminPass123!";
   process.env.MAX_UPLOAD_MB = process.env.MAX_UPLOAD_MB ?? "50";
+}
+
+export async function cleanDatabase() {
+  await prisma.$transaction([
+    prisma.auditLog.deleteMany(),
+    prisma.book.deleteMany(),
+    prisma.user.deleteMany(),
+  ]);
 }
 
 export async function seedAdmin() {
@@ -60,11 +67,4 @@ export async function clearTestStorage() {
   } catch {
     // ignore
   }
-}
-
-export function resetTestDatabase() {
-  execSync("npx prisma db push --force-reset --accept-data-loss --skip-generate", {
-    stdio: "ignore",
-    env: { ...process.env, DATABASE_URL: process.env.DATABASE_URL! },
-  });
 }
