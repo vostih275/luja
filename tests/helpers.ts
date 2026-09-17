@@ -34,7 +34,7 @@ export async function seedAdmin() {
 export async function createUser(email: string, password: string, role: "ADMIN" | "READER") {
   return prisma.user.create({
     data: {
-      email,
+      email: email.trim().toLowerCase(),
       passwordHash: await bcrypt.hash(password, 10),
       role,
     },

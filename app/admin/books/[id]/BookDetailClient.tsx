@@ -78,7 +78,7 @@ export default function BookDetailClient({
       return;
     }
     if (data.inviteToken) {
-      setInviteLink(`/invite/${data.inviteToken}`);
+      setInviteLink(`/claim?token=${encodeURIComponent(data.inviteToken)}&email=${encodeURIComponent(grantEmail)}`);
       setMessage("Invitation created. Share the link below.");
       setInvitations((prev) => [
         ...prev,
