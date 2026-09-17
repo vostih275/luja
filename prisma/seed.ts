@@ -23,8 +23,8 @@ async function main() {
   if (!email || !password) {
     throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD must be set to seed the admin user.");
   }
-  if (password.length < 12) {
-    throw new Error("ADMIN_PASSWORD must be at least 12 characters.");
+  if (password.length < 8) {
+    throw new Error("ADMIN_PASSWORD must be at least 8 characters.");
   }
 
   const passwordHash = await bcrypt.hash(password, 12);

@@ -37,7 +37,7 @@ export default function LibraryClient({
       <header className="border-b bg-white px-6 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <div className="flex items-center gap-2">
-            <BookOpen className="h-6 w-6" />
+            <Image src="/logo.png" alt="Luja logo" width={32} height={32} priority />
             <h1 className="text-xl font-semibold">My Library</h1>
           </div>
           <div className="flex items-center gap-4">

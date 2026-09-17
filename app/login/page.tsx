@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +32,15 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
       <div className="rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-semibold">Sign in to Luja</h1>
+        <Image
+          src="/logo.png"
+          alt="Luja logo"
+          width={64}
+          height={64}
+          priority
+          className="mx-auto"
+        />
+        <h1 className="mt-4 text-center text-2xl font-semibold">Sign in to Luja</h1>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="space-y-1">
             <label className="text-sm font-medium">Email</label>
