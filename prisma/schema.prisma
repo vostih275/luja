@@ -1,0 +1,93 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  READER
+}
+
+model User {
+  id           String       @id @default(uuid())
+  email        String       @unique
+  passwordHash String
+  role         Role         @default(READER)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  permissions  Permission[] @relation("UserPermissions")
+  grantedBy    Permission[] @relation("AdminGrantedPermissions")
+  auditLogs    AuditLog[]   @relation("ActorAuditLogs")
+}
+
+model Book {
+  id              String       @id @default(uuid())
+  title           String
+  author          String
+  description     String
+  coverImageUrl   String?
+  fileStorageKey  String       @unique // Server-generated UUID mapping to storage/books/
+  mimeType        String
+  fileSizeBytes   Int
+  publicationDate DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  permissions     Permission[]
+  invitations     Invitation[]
+  auditLogs       AuditLog[]
+}
+
+model Permission {
+  id        String   @id @default(uuid())
+  userId    String
+  bookId    String
+  grantedBy String
+  createdAt DateTime @default(now())
+
+  user      User     @relation("UserPermissions", fields: [userId], references: [id], onDelete: Cascade)
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  admin     User     @relation("AdminGrantedPermissions", fields: [grantedBy], references: [id])
+
+  @@unique([userId, bookId])
+  @@index([userId])
+  @@index([bookId])
+}
+
+model Invitation {
+  id        String    @id @default(uuid())
+  email     String
+  bookId    String
+  tokenHash String    @unique // Hashed token (SHA-256)
+  expiresAt DateTime
+  claimedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  book      Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([tokenHash])
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  action       String   // e.g., "BOOK_UPLOAD", "PERMISSION_GRANT", "PERMISSION_REVOKE", "BOOK_ACCESS"
+  actorId      String?
+  targetUserId String?
+  targetBookId String?
+  details      String?  // JSON stringified optional metadata
+  ipAddress    String?
+  createdAt    DateTime @default(now())
+
+  actor        User?    @relation("ActorAuditLogs", fields: [actorId], references: [id], onDelete: SetNull)
+  book         Book?    @relation(fields: [targetBookId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([targetBookId])
+  @@index([createdAt])
+}
