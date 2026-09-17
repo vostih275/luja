@@ -24,6 +24,7 @@ next-env.d.ts
 # private book storage — uploaded binaries must never be committed
 /storage/books/*
 !/storage/books/.gitkeep
+/storage/books-test/
 
 # misc
 .DS_Store
