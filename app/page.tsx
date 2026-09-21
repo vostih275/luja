@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Eye, Shield, Cloud } from "lucide-react";
 
@@ -9,8 +10,15 @@ export default function LandingPage() {
     <div className="flex min-h-screen flex-col bg-slate-950 text-slate-50">
       <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="font-serif text-2xl font-bold tracking-tight">
-            Luja.
+          <Link href="/" className="flex items-center">
+            <Image
+              alt="Luja Logo"
+              className="h-8 w-auto object-contain"
+              height={40}
+              priority
+              src="/logo.png"
+              width={120}
+            />
           </Link>
           <div className="flex items-center gap-6 text-sm">
             <Link href="/admin" className="text-slate-400 transition hover:text-slate-50">
