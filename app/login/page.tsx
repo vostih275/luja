@@ -30,8 +30,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
-      <div className="rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center bg-slate-950 px-6">
+      <div className="rounded-xl border border-slate-800 bg-slate-900 p-8">
         <Image
           src="/logo.png"
           alt="Luja logo"
@@ -40,36 +40,36 @@ export default function LoginPage() {
           priority
           className="mx-auto"
         />
-        <h1 className="mt-4 text-center text-2xl font-semibold">Sign in to Luja</h1>
+        <h1 className="mt-4 text-center text-2xl font-semibold text-slate-100">Sign in to Luja</h1>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="space-y-1">
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium text-slate-300">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-medium">Password</label>
+            <label className="text-sm font-medium text-slate-300">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600 disabled:opacity-50"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
         </form>
       </div>
     </main>

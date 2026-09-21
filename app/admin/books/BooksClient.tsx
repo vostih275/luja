@@ -55,10 +55,10 @@ export default function BooksClient({ initialBooks }: { initialBooks: BookRow[] 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Books</h1>
+        <h1 className="text-2xl font-semibold text-slate-100">Books</h1>
         <button
           onClick={() => setShowForm((v) => !v)}
-          className="inline-flex items-center gap-2 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700"
+          className="inline-flex items-center gap-2 rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600"
         >
           <Plus className="h-4 w-4" />
           Upload book
@@ -68,51 +68,59 @@ export default function BooksClient({ initialBooks }: { initialBooks: BookRow[] 
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm"
+          className="rounded-xl border border-slate-800 bg-slate-900 p-6"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Title</label>
-              <input name="title" required className="w-full rounded-md border px-3 py-2" />
+              <label className="text-sm font-medium text-slate-300">Title</label>
+              <input
+                name="title"
+                required
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50 placeholder:text-slate-500"
+              />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Author</label>
-              <input name="author" required className="w-full rounded-md border px-3 py-2" />
+              <label className="text-sm font-medium text-slate-300">Author</label>
+              <input
+                name="author"
+                required
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50 placeholder:text-slate-500"
+              />
             </div>
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium text-slate-300">Description</label>
               <textarea
                 name="description"
                 required
-                className="w-full rounded-md border px-3 py-2"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50 placeholder:text-slate-500"
                 rows={3}
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Publication date</label>
+              <label className="text-sm font-medium text-slate-300">Publication date</label>
               <input
                 name="publicationDate"
                 type="datetime-local"
-                className="w-full rounded-md border px-3 py-2"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Book file (PDF or EPUB)</label>
+              <label className="text-sm font-medium text-slate-300">Book file (PDF or EPUB)</label>
               <input
                 name="file"
                 type="file"
                 accept="application/pdf,application/epub+zip"
                 required
-                className="w-full rounded-md border px-3 py-2 text-sm"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-300 file:mr-4 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1 file:text-slate-50"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Cover image (optional)</label>
+              <label className="text-sm font-medium text-slate-300">Cover image (optional)</label>
               <input
                 name="coverImage"
                 type="file"
                 accept="image/*"
-                className="w-full rounded-md border px-3 py-2 text-sm"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-300 file:mr-4 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1 file:text-slate-50"
               />
             </div>
           </div>
@@ -120,7 +128,7 @@ export default function BooksClient({ initialBooks }: { initialBooks: BookRow[] 
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600 disabled:opacity-50"
             >
               <Upload className="h-4 w-4" />
               {loading ? "Uploading..." : "Upload"}
@@ -128,22 +136,22 @@ export default function BooksClient({ initialBooks }: { initialBooks: BookRow[] 
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="rounded-md border px-4 py-2 text-sm"
+              className="rounded-md border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500 hover:text-slate-50"
             >
               Cancel
             </button>
           </div>
           {message && (
-            <p className={`mt-3 text-sm ${message.includes("success") ? "text-green-600" : "text-red-600"}`}>
+            <p className={`mt-3 text-sm ${message.includes("success") ? "text-green-400" : "text-red-400"}`}>
               {message}
             </p>
           )}
         </form>
       )}
 
-      <div className="rounded-lg border border-neutral-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
         <table className="w-full text-left text-sm">
-          <thead className="border-b bg-neutral-100">
+          <thead className="border-b border-slate-800 bg-slate-900/50 text-slate-400">
             <tr>
               <th className="px-4 py-3 font-medium">Title</th>
               <th className="px-4 py-3 font-medium">Author</th>
@@ -152,17 +160,17 @@ export default function BooksClient({ initialBooks }: { initialBooks: BookRow[] 
               <th className="px-4 py-3 font-medium">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-800/50">
             {books.map((book) => (
-              <tr key={book.id} className="border-b last:border-0">
-                <td className="px-4 py-3">{book.title}</td>
-                <td className="px-4 py-3">{book.author}</td>
-                <td className="px-4 py-3">{book._count.permissions}</td>
-                <td className="px-4 py-3">{new Date(book.createdAt).toLocaleDateString()}</td>
+              <tr key={book.id} className="transition hover:bg-slate-800/50">
+                <td className="px-4 py-3 text-slate-100">{book.title}</td>
+                <td className="px-4 py-3 text-slate-400">{book.author}</td>
+                <td className="px-4 py-3 text-slate-400">{book._count.permissions}</td>
+                <td className="px-4 py-3 text-slate-400">{new Date(book.createdAt).toLocaleDateString()}</td>
                 <td className="px-4 py-3">
                   <Link
                     href={`/admin/books/${book.id}`}
-                    className="inline-flex items-center gap-1 text-neutral-700 hover:underline"
+                    className="inline-flex items-center gap-1 text-indigo-400 transition hover:text-indigo-300"
                   >
                     <BookOpen className="h-4 w-4" />
                     Manage
@@ -172,7 +180,7 @@ export default function BooksClient({ initialBooks }: { initialBooks: BookRow[] 
             ))}
             {books.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-neutral-500">
+                <td colSpan={5} className="px-4 py-6 text-center text-slate-500">
                   No books uploaded yet.
                 </td>
               </tr>

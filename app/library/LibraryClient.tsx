@@ -33,21 +33,21 @@ export default function LibraryClient({
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b bg-white px-6 py-4">
+    <div className="min-h-screen bg-slate-950 text-slate-50">
+      <header className="border-b border-slate-800 bg-slate-900/80 px-6 py-4 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <div className="flex items-center gap-2">
             <Image src="/logo.png" alt="Luja logo" width={32} height={32} priority />
-            <h1 className="text-xl font-semibold">My Library</h1>
+            <h1 className="text-xl font-semibold text-slate-100">My Library</h1>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm font-medium text-neutral-900">{user.email}</p>
-              <p className="text-xs text-neutral-500">{user.role.toLowerCase()}</p>
+              <p className="text-sm font-medium text-slate-100">{user.email}</p>
+              <p className="text-xs text-slate-400">{user.role.toLowerCase()}</p>
             </div>
             <button
               onClick={logout}
-              className="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-neutral-100"
+              className="inline-flex items-center gap-2 rounded-md border border-slate-700 px-3 py-2 text-sm text-slate-50 transition hover:border-indigo-500 hover:text-indigo-400"
             >
               <LogOut className="h-4 w-4" />
               Logout
@@ -58,10 +58,10 @@ export default function LibraryClient({
 
       <main className="mx-auto max-w-6xl p-6">
         {initialBooks.length === 0 ? (
-          <div className="rounded-lg border bg-white p-12 text-center shadow-sm">
-            <BookOpen className="mx-auto h-12 w-12 text-neutral-300" />
-            <h2 className="mt-4 text-lg font-medium">No books shared with you yet</h2>
-            <p className="mt-2 text-sm text-neutral-500">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 p-12 text-center">
+            <BookOpen className="mx-auto h-12 w-12 text-slate-600" />
+            <h2 className="mt-4 text-lg font-medium text-slate-100">No books shared with you yet</h2>
+            <p className="mt-2 text-sm text-slate-400">
               When an admin grants you access, books will appear here.
             </p>
           </div>
@@ -71,9 +71,9 @@ export default function LibraryClient({
               <Link
                 key={book.id}
                 href={`/library/${book.id}`}
-                className="group rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
+                className="group rounded-xl border border-slate-800 bg-slate-900 p-4 transition hover:border-slate-700 hover:bg-slate-800/50"
               >
-                <div className="relative flex h-40 items-center justify-center rounded-md bg-neutral-100">
+                <div className="relative flex h-40 items-center justify-center rounded-md bg-slate-800">
                   {book.coverImageUrl ? (
                     <Image
                       src={book.coverImageUrl}
@@ -82,14 +82,14 @@ export default function LibraryClient({
                       className="rounded-md object-cover"
                     />
                   ) : (
-                    <BookOpen className="h-12 w-12 text-neutral-400" />
+                    <BookOpen className="h-12 w-12 text-slate-500" />
                   )}
                 </div>
-                <h2 className="mt-3 text-lg font-semibold">{book.title}</h2>
-                <p className="text-sm text-neutral-500">{book.author}</p>
-                <p className="mt-2 line-clamp-3 text-sm text-neutral-700">{book.description}</p>
+                <h2 className="mt-3 text-lg font-semibold text-slate-100">{book.title}</h2>
+                <p className="text-sm text-slate-400">{book.author}</p>
+                <p className="mt-2 line-clamp-3 text-sm text-slate-300">{book.description}</p>
                 {book.publicationDate && (
-                  <p className="mt-2 text-xs text-neutral-400">
+                  <p className="mt-2 text-xs text-slate-500">
                     {new Date(book.publicationDate).toLocaleDateString()}
                   </p>
                 )}

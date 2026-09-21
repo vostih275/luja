@@ -47,54 +47,54 @@ function ClaimForm() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6">
-      <div className="rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-semibold">Accept your invitation</h1>
-        <p className="mt-2 text-sm text-neutral-500">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center bg-slate-950 px-6">
+      <div className="rounded-xl border border-slate-800 bg-slate-900 p-8">
+        <h1 className="text-2xl font-semibold text-slate-100">Accept your invitation</h1>
+        <p className="mt-2 text-sm text-slate-400">
           Create a password to access your shared book.
         </p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="space-y-1">
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium text-slate-300">Email</label>
             <input
               type="email"
               value={email}
               readOnly
-              className="w-full rounded-md border bg-neutral-100 px-3 py-2 text-neutral-500"
+              className="w-full rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-slate-500"
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-medium">Password</label>
+            <label className="text-sm font-medium text-slate-300">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-medium">Confirm password</label>
+            <label className="text-sm font-medium text-slate-300">Confirm password</label>
             <input
               type="password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               required
               minLength={8}
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
             />
           </div>
           <button
             type="submit"
             disabled={loading || !token}
-            className="w-full rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600 disabled:opacity-50"
           >
             {loading ? "Creating account..." : "Create account"}
           </button>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
         </form>
-        <Link href="/login" className="mt-4 block text-center text-sm text-neutral-700 hover:underline">
+        <Link href="/login" className="mt-4 block text-center text-sm text-indigo-400 transition hover:text-indigo-300">
           Already have an account? Sign in
         </Link>
       </div>
@@ -104,7 +104,7 @@ function ClaimForm() {
 
 export default function ClaimPage() {
   return (
-    <Suspense fallback={<div className="p-12 text-center">Loading invitation...</div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-400">Loading invitation...</div>}>
       <ClaimForm />
     </Suspense>
   );

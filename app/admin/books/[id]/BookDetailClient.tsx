@@ -137,17 +137,17 @@ export default function BookDetailClient({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{book.title}</h1>
+        <h1 className="text-2xl font-semibold text-slate-100">{book.title}</h1>
         <div className="flex gap-2">
           <button
             onClick={() => setEditMode((v) => !v)}
-            className="rounded-md border px-4 py-2 text-sm"
+            className="rounded-md border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500 hover:text-slate-50"
           >
             {editMode ? "Cancel" : "Edit"}
           </button>
           <button
             onClick={deleteBook}
-            className="inline-flex items-center gap-2 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            className="inline-flex items-center gap-2 rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600"
           >
             <Trash2 className="h-4 w-4" />
             Delete
@@ -156,64 +156,64 @@ export default function BookDetailClient({
       </div>
 
       {editMode ? (
-        <form onSubmit={updateBook} className="rounded-lg border bg-white p-4 shadow-sm">
+        <form onSubmit={updateBook} className="rounded-xl border border-slate-800 bg-slate-900 p-6">
           <div className="grid gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Title</label>
+              <label className="text-sm font-medium text-slate-300">Title</label>
               <input
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full rounded-md border px-3 py-2"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Author</label>
+              <label className="text-sm font-medium text-slate-300">Author</label>
               <input
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="w-full rounded-md border px-3 py-2"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium text-slate-300">Description</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full rounded-md border px-3 py-2"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
                 rows={3}
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Publication date</label>
+              <label className="text-sm font-medium text-slate-300">Publication date</label>
               <input
                 type="datetime-local"
                 value={formData.publicationDate ?? ""}
                 onChange={(e) => setFormData({ ...formData, publicationDate: e.target.value || null })}
-                className="w-full rounded-md border px-3 py-2"
+                className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50"
               />
             </div>
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 inline-flex items-center gap-2 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="mt-4 inline-flex items-center gap-2 rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600 disabled:opacity-50"
           >
             <Save className="h-4 w-4" />
             Save
           </button>
         </form>
       ) : (
-        <div className="rounded-lg border bg-white p-4 shadow-sm">
-          <p className="text-sm text-neutral-500">{book.author}</p>
-          <p className="mt-2 text-neutral-700">{book.description}</p>
-          <p className="mt-2 text-sm text-neutral-500">
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+          <p className="text-sm text-slate-400">{book.author}</p>
+          <p className="mt-2 text-slate-200">{book.description}</p>
+          <p className="mt-2 text-sm text-slate-400">
             {book.mimeType} · {(book.fileSizeBytes / 1024 / 1024).toFixed(2)} MB
           </p>
         </div>
       )}
 
-      <form onSubmit={grantAccess} className="rounded-lg border bg-white p-4 shadow-sm">
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-medium">
+      <form onSubmit={grantAccess} className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-medium text-slate-100">
           <UserPlus className="h-5 w-5" />
           Grant access
         </h2>
@@ -224,39 +224,39 @@ export default function BookDetailClient({
             value={grantEmail}
             onChange={(e) => setGrantEmail(e.target.value)}
             required
-            className="flex-1 rounded-md border px-3 py-2"
+            className="flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-50 placeholder:text-slate-500"
           />
           <button
             type="submit"
             disabled={loading}
-            className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600 disabled:opacity-50"
           >
             Grant
           </button>
         </div>
         {inviteLink && (
-          <div className="mt-3 rounded-md bg-neutral-100 p-3 text-sm">
-            <p className="font-medium">Invitation link (single-use, 7 days):</p>
-            <code className="mt-1 block break-all text-blue-700">{window.location.origin}{inviteLink}</code>
+          <div className="mt-3 rounded-md border border-slate-800 bg-slate-950 p-3 text-sm">
+            <p className="font-medium text-slate-200">Invitation link (single-use, 7 days):</p>
+            <code className="mt-1 block break-all text-indigo-400">{window.location.origin}{inviteLink}</code>
           </div>
         )}
       </form>
 
-      <div className="rounded-lg border bg-white p-4 shadow-sm">
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-medium">
+      <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-medium text-slate-100">
           <Users className="h-5 w-5" />
           Readers with access
         </h2>
         {permissions.length === 0 ? (
-          <p className="text-sm text-neutral-500">No readers yet.</p>
+          <p className="text-sm text-slate-500">No readers yet.</p>
         ) : (
-          <ul className="divide-y">
+          <ul className="divide-y divide-slate-800/50">
             {permissions.map((p) => (
-              <li key={p.id} className="flex items-center justify-between py-2">
-                <span className="text-sm">{p.user.email}</span>
+              <li key={p.id} className="flex items-center justify-between py-2 transition hover:bg-slate-800/30">
+                <span className="text-sm text-slate-300">{p.user.email}</span>
                 <button
                   onClick={() => revokePermission(p.user.id)}
-                  className="text-sm text-red-600 hover:underline"
+                  className="text-sm text-red-400 transition hover:text-red-300"
                 >
                   Revoke
                 </button>
@@ -266,21 +266,21 @@ export default function BookDetailClient({
         )}
       </div>
 
-      <div className="rounded-lg border bg-white p-4 shadow-sm">
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-medium">
+      <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-medium text-slate-100">
           <Mail className="h-5 w-5" />
           Pending invitations
         </h2>
         {invitations.length === 0 ? (
-          <p className="text-sm text-neutral-500">No pending invitations.</p>
+          <p className="text-sm text-slate-500">No pending invitations.</p>
         ) : (
-          <ul className="divide-y">
+          <ul className="divide-y divide-slate-800/50">
             {invitations.map((inv) => (
-              <li key={inv.id} className="flex items-center justify-between py-2">
-                <span className="text-sm">{inv.email} · expires {new Date(inv.expiresAt).toLocaleDateString()}</span>
+              <li key={inv.id} className="flex items-center justify-between py-2 transition hover:bg-slate-800/30">
+                <span className="text-sm text-slate-300">{inv.email} · expires {new Date(inv.expiresAt).toLocaleDateString()}</span>
                 <button
                   onClick={() => revokeInvitation(inv.email)}
-                  className="text-sm text-red-600 hover:underline"
+                  className="text-sm text-red-400 transition hover:text-red-300"
                 >
                   Revoke
                 </button>
@@ -291,7 +291,7 @@ export default function BookDetailClient({
       </div>
 
       {message && (
-        <p className={`text-sm ${message.includes("successfully") || message.includes("granted") || message.includes("created") || message.includes("updated") ? "text-green-600" : "text-red-600"}`}>
+        <p className={`text-sm ${message.includes("successfully") || message.includes("granted") || message.includes("created") || message.includes("updated") ? "text-green-400" : "text-red-400"}`}>
           {message}
         </p>
       )}

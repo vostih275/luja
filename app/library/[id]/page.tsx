@@ -22,18 +22,20 @@ export default async function ReaderBookPage({
 
   if (!permitted) {
     return (
-      <main className="mx-auto max-w-2xl p-12 text-center">
-        <h1 className="text-2xl font-semibold">Access Restricted</h1>
-        <p className="mt-2 text-neutral-600">
-          You do not have permission to view this book. If access was revoked,
-          contact the administrator.
-        </p>
-        <Link
-          href="/library"
-          className="mt-6 inline-block rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
-        >
-          Back to library
-        </Link>
+      <main className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-12 text-center">
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-8">
+          <h1 className="text-2xl font-semibold text-slate-100">Access Restricted</h1>
+          <p className="mt-2 text-slate-400">
+            You do not have permission to view this book. If access was revoked,
+            contact the administrator.
+          </p>
+          <Link
+            href="/library"
+            className="mt-6 inline-block rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600"
+          >
+            Back to library
+          </Link>
+        </div>
       </main>
     );
   }
@@ -44,52 +46,56 @@ export default async function ReaderBookPage({
   });
   if (!book) {
     return (
-      <main className="mx-auto max-w-2xl p-12 text-center">
-        <h1 className="text-2xl font-semibold">Book not found</h1>
-        <Link href="/library" className="mt-4 inline-block text-neutral-700 hover:underline">
-          Back to library
-        </Link>
+      <main className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-12 text-center">
+        <div className="rounded-xl border border-slate-800 bg-slate-900 p-8">
+          <h1 className="text-2xl font-semibold text-slate-100">Book not found</h1>
+          <Link href="/library" className="mt-4 inline-block text-indigo-400 transition hover:text-indigo-300">
+            Back to library
+          </Link>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{book.title}</h1>
-        <div className="flex gap-2">
-          <Link
-            href={`/api/books/${book.id}/file`}
-            target="_blank"
-            className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
-          >
-            Open / Download
-          </Link>
-          <Link
-            href="/library"
-            className="rounded-md border px-4 py-2 text-sm"
-          >
-            Back
-          </Link>
-        </div>
-      </div>
-      {book.mimeType === "application/pdf" ? (
-        <iframe
-          src={`/api/books/${book.id}/file`}
-          className="h-[80vh] w-full rounded-lg border"
-          title={book.title}
-        />
-      ) : (
-        <div className="rounded-lg border bg-white p-12 text-center">
-          <p className="text-neutral-600">
-            This book format is not previewable in the browser. Use the
-            <Link href={`/api/books/${book.id}/file`} className="mx-1 font-medium text-blue-700 hover:underline">
-              download link
+    <main className="min-h-screen bg-slate-950 p-6 text-slate-50">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-4 flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-slate-100">{book.title}</h1>
+          <div className="flex gap-2">
+            <Link
+              href={`/api/books/${book.id}/file`}
+              target="_blank"
+              className="rounded-md bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-600"
+            >
+              Open / Download
             </Link>
-            to open it.
-          </p>
+            <Link
+              href="/library"
+              className="rounded-md border border-slate-700 px-4 py-2 text-sm text-slate-50 transition hover:border-slate-500"
+            >
+              Back
+            </Link>
+          </div>
         </div>
-      )}
+        {book.mimeType === "application/pdf" ? (
+          <iframe
+            src={`/api/books/${book.id}/file`}
+            className="h-[80vh] w-full rounded-xl border border-slate-800"
+            title={book.title}
+          />
+        ) : (
+          <div className="rounded-xl border border-slate-800 bg-slate-900 p-12 text-center">
+            <p className="text-slate-300">
+              This book format is not previewable in the browser. Use the
+              <Link href={`/api/books/${book.id}/file`} className="mx-1 font-medium text-indigo-400 transition hover:text-indigo-300">
+                download link
+              </Link>
+              to open it.
+            </p>
+          </div>
+        )}
+      </div>
     </main>
   );
 }

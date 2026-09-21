@@ -13,11 +13,11 @@ export default function LandingPage() {
           <Link href="/" className="flex items-center">
             <Image
               alt="Luja Logo"
-              className="h-8 w-auto object-contain"
-              height={40}
+              className="h-16 w-auto object-contain"
+              height={80}
               priority
               src="/logo.png"
-              width={120}
+              width={200}
             />
           </Link>
           <div className="flex items-center gap-6 text-sm">
