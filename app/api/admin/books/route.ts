@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { bookCreateSchema, validateFileSize, validateMimeType } from "@/lib/validation";
 import { generateStorageKey, writeBookFile } from "@/lib/storage";
+import { isCloudinaryEnabled, uploadBookFile, uploadCoverImage } from "@/lib/cloudinary";
 import { getClientIp } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
 
@@ -72,9 +73,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: (err as Error).message }, { status: 400 });
   }
 
-  const key = generateStorageKey();
+  let fileStorageKey: string;
+  let coverImageUrl: string | null = null;
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeBookFile(key, buffer);
+
+  if (isCloudinaryEnabled()) {
+    const bookUpload = await uploadBookFile(buffer, file.name);
+    fileStorageKey = bookUpload.publicId;
+
+    const cover = formData.get("coverImage");
+    if (cover && cover instanceof File) {
+      validateMimeType(cover.type, "cover");
+      validateFileSize(cover.size, 5);
+      const coverBuffer = Buffer.from(await cover.arrayBuffer());
+      const coverUpload = await uploadCoverImage(coverBuffer);
+      coverImageUrl = coverUpload.url;
+    }
+  } else {
+    fileStorageKey = generateStorageKey();
+    await writeBookFile(fileStorageKey, buffer);
+  }
 
   const publicationDate = parsed.data.publicationDate
     ? new Date(parsed.data.publicationDate)
@@ -86,7 +104,8 @@ export async function POST(req: NextRequest) {
       author: parsed.data.author,
       description: parsed.data.description,
       publicationDate,
-      fileStorageKey: key,
+      coverImageUrl,
+      fileStorageKey,
       mimeType: file.type,
       fileSizeBytes: file.size,
     },

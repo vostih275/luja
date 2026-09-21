@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { bookUpdateSchema } from "@/lib/validation";
 import { resolveSafeBookPath } from "@/lib/storage";
+import { isCloudinaryEnabled, deleteBookAsset } from "@/lib/cloudinary";
 import { getClientIp } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
 
@@ -70,9 +71,13 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   }
 
   try {
-    await fs.unlink(resolveSafeBookPath(book.fileStorageKey));
+    if (isCloudinaryEnabled()) {
+      await deleteBookAsset(book.fileStorageKey, "raw");
+    } else {
+      await fs.unlink(resolveSafeBookPath(book.fileStorageKey));
+    }
   } catch {
-    // File may already be gone; cascade DB delete is the authoritative action.
+    // Asset may already be gone; cascade DB delete is the authoritative action.
   }
 
   await prisma.book.delete({ where: { id } });

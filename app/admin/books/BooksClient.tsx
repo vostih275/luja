@@ -106,6 +106,15 @@ export default function BooksClient({ initialBooks }: { initialBooks: BookRow[] 
                 className="w-full rounded-md border px-3 py-2 text-sm"
               />
             </div>
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Cover image (optional)</label>
+              <input
+                name="coverImage"
+                type="file"
+                accept="image/*"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+              />
+            </div>
           </div>
           <div className="mt-4 flex items-center gap-3">
             <button

@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { resolveSafeBookPath } from "@/lib/storage";
+import { isCloudinaryEnabled, getSignedBookUrl } from "@/lib/cloudinary";
 import { logAction } from "@/lib/audit";
 import { sanitizeFilename } from "@/lib/validation";
 
@@ -53,6 +54,41 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Book not found" }, { status: 404 });
   }
 
+  await logAction({
+    action: "BOOK_ACCESS",
+    actorId: user.id,
+    targetBookId: book.id,
+    ipAddress: ip,
+  });
+
+  const sanitizedTitle = sanitizeFilename(book.title).slice(0, 80) || "book";
+  const extension = mimeExtension(book.mimeType);
+  const headers: Record<string, string> = {
+    "Content-Type": book.mimeType,
+    "Content-Disposition": `inline; filename="${sanitizedTitle}.${extension}"`,
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "private, no-store, max-age=0, must-revalidate",
+    Pragma: "no-cache",
+  };
+
+  if (isCloudinaryEnabled()) {
+    let signedUrl: string;
+    try {
+      signedUrl = getSignedBookUrl(book.fileStorageKey);
+    } catch {
+      return NextResponse.json({ error: "Could not sign book URL" }, { status: 500 });
+    }
+
+    const remote = await fetch(signedUrl);
+    if (!remote.ok) {
+      return NextResponse.json({ error: "Book unavailable from storage" }, { status: 502 });
+    }
+    if (remote.headers.get("content-length")) {
+      headers["Content-Length"] = remote.headers.get("content-length")!;
+    }
+    return new Response(remote.body, { status: 200, headers });
+  }
+
   const filePath = resolveSafeBookPath(book.fileStorageKey);
   if (!filePath.startsWith(path.resolve(process.env.STORAGE_DIR ?? "./storage/books") + path.sep)) {
     return NextResponse.json({ error: "Invalid storage path" }, { status: 500 });
@@ -61,27 +97,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "File not found" }, { status: 404 });
   }
 
-  await logAction({
-    action: "BOOK_ACCESS",
-    actorId: user.id,
-    targetBookId: book.id,
-    ipAddress: ip,
-  });
-
   const fileStream = fs.createReadStream(filePath);
   const webStream = Readable.toWeb(fileStream) as ReadableStream<Uint8Array>;
-
-  const sanitizedTitle = sanitizeFilename(book.title).slice(0, 80) || "book";
-  const extension = mimeExtension(book.mimeType);
-
-  return new Response(webStream, {
-    status: 200,
-    headers: {
-      "Content-Type": book.mimeType,
-      "Content-Disposition": `inline; filename="${sanitizedTitle}.${extension}"`,
-      "X-Content-Type-Options": "nosniff",
-      "Cache-Control": "private, no-store, max-age=0, must-revalidate",
-      Pragma: "no-cache",
-    },
-  });
+  return new Response(webStream, { status: 200, headers });
 }
