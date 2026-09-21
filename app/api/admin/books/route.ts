@@ -6,6 +6,7 @@ import { generateStorageKey, writeBookFile } from "@/lib/storage";
 import { isCloudinaryEnabled, uploadBookFile, uploadCoverImage } from "@/lib/cloudinary";
 import { getClientIp } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
+import { apiHandler } from "@/lib/api";
 
 async function requireAdminResponse(req: NextRequest) {
   const user = await getCurrentUser(req);
@@ -18,7 +19,7 @@ async function requireAdminResponse(req: NextRequest) {
   return user;
 }
 
-export async function GET(req: NextRequest) {
+export const GET = apiHandler(async (req: NextRequest) => {
   const admin = await requireAdminResponse(req);
   if (admin instanceof NextResponse) return admin;
   const books = await prisma.book.findMany({
@@ -30,9 +31,9 @@ export async function GET(req: NextRequest) {
     },
   });
   return NextResponse.json({ books });
-}
+});
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const admin = await requireAdminResponse(req);
   if (admin instanceof NextResponse) return admin;
 
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
 
   let fileStorageKey: string;
   let coverImageUrl: string | null = null;
+  let coverImagePublicId: string | null = null;
   const buffer = Buffer.from(await file.arrayBuffer());
 
   if (isCloudinaryEnabled()) {
@@ -88,6 +90,7 @@ export async function POST(req: NextRequest) {
       const coverBuffer = Buffer.from(await cover.arrayBuffer());
       const coverUpload = await uploadCoverImage(coverBuffer);
       coverImageUrl = coverUpload.url;
+      coverImagePublicId = coverUpload.publicId;
     }
   } else {
     fileStorageKey = generateStorageKey();
@@ -105,6 +108,7 @@ export async function POST(req: NextRequest) {
       description: parsed.data.description,
       publicationDate,
       coverImageUrl,
+      coverImagePublicId,
       fileStorageKey,
       mimeType: file.type,
       fileSizeBytes: file.size,
@@ -120,4 +124,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ book }, { status: 201 });
-}
+});

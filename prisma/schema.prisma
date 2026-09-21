@@ -26,14 +26,15 @@ model User {
 }
 
 model Book {
-  id              String       @id @default(uuid())
-  title           String
-  author          String
-  description     String
-  coverImageUrl   String?
-  fileStorageKey  String       @unique // Server-generated UUID mapping to storage/books/
-  mimeType        String
-  fileSizeBytes   Int
+  id                String       @id @default(uuid())
+  title             String
+  author            String
+  description       String
+  coverImageUrl     String?
+  coverImagePublicId String?
+  fileStorageKey    String       @unique // Server-generated UUID mapping to storage/books/ or Cloudinary public_id
+  mimeType          String
+  fileSizeBytes     Int
   publicationDate DateTime?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt

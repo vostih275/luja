@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getClientIp } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
+import { apiHandler } from "@/lib/api";
 
 const revokeSchema = z.object({
   bookId: z.string().uuid(),
@@ -25,7 +26,7 @@ async function requireAdminResponse(req: NextRequest) {
   return user;
 }
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const admin = await requireAdminResponse(req);
   if (admin instanceof NextResponse) return admin;
 
@@ -83,4 +84,4 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({ ok: true });
-}
+});

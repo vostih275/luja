@@ -5,8 +5,9 @@ import { loginSchema } from "@/lib/validation";
 import { signSessionToken, setSessionCookie } from "@/lib/auth";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
+import { apiHandler } from "@/lib/api";
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const ip = getClientIp(req);
   const { allowed, retryAfter } = rateLimit(`${ip}:login`, 5, 60_000);
   if (!allowed) {
@@ -49,4 +50,4 @@ export async function POST(req: NextRequest) {
     user: { id: user.id, email: user.email, role: user.role },
   });
   return setSessionCookie(response, token);
-}
+});

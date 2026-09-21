@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { apiHandler } from "@/lib/api";
 
 async function requireAdminResponse(req: NextRequest) {
   const user = await getCurrentUser(req);
@@ -13,7 +14,7 @@ async function requireAdminResponse(req: NextRequest) {
   return user;
 }
 
-export async function GET(req: NextRequest) {
+export const GET = apiHandler(async (req: NextRequest) => {
   const admin = await requireAdminResponse(req);
   if (admin instanceof NextResponse) return admin;
   const bookId = req.nextUrl.searchParams.get("bookId");
@@ -32,4 +33,4 @@ export async function GET(req: NextRequest) {
   });
 
   return NextResponse.json({ permissions, invitations });
-}
+});

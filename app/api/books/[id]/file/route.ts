@@ -9,6 +9,7 @@ import { resolveSafeBookPath } from "@/lib/storage";
 import { isCloudinaryEnabled, getSignedBookUrl } from "@/lib/cloudinary";
 import { logAction } from "@/lib/audit";
 import { sanitizeFilename } from "@/lib/validation";
+import { apiHandlerWithParams } from "@/lib/api";
 
 function mimeExtension(mimeType: string): string {
   if (mimeType === "application/pdf") return "pdf";
@@ -16,7 +17,7 @@ function mimeExtension(mimeType: string): string {
   return "bin";
 }
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const GET = apiHandlerWithParams(async (req: NextRequest, { params }) => {
   const { id: bookId } = await params;
   const ip = getClientIp(req);
 
@@ -90,7 +91,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const filePath = resolveSafeBookPath(book.fileStorageKey);
-  if (!filePath.startsWith(path.resolve(process.env.STORAGE_DIR ?? "./storage/books") + path.sep)) {
+  const storageRoot = path.resolve(process.env.STORAGE_DIR ?? "./storage/books");
+  if (!filePath.startsWith(storageRoot + path.sep)) {
     return NextResponse.json({ error: "Invalid storage path" }, { status: 500 });
   }
   if (!fs.existsSync(filePath)) {
@@ -100,4 +102,4 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const fileStream = fs.createReadStream(filePath);
   const webStream = Readable.toWeb(fileStream) as ReadableStream<Uint8Array>;
   return new Response(webStream, { status: 200, headers });
-}
+});

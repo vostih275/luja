@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { apiHandler } from "@/lib/api";
 
-export async function GET(req: NextRequest) {
+export const GET = apiHandler(async (req: NextRequest) => {
   const user = await getCurrentUser(req);
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -29,4 +30,4 @@ export async function GET(req: NextRequest) {
 
   const books = permissions.map((p) => p.book);
   return NextResponse.json({ books });
-}
+});

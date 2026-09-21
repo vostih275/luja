@@ -5,8 +5,9 @@ import { invitationClaimSchema } from "@/lib/validation";
 import { hashInviteToken } from "@/lib/invitations";
 import { signSessionToken, setSessionCookie } from "@/lib/auth";
 import { getClientIp } from "@/lib/rate-limit";
+import { apiHandler } from "@/lib/api";
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   let body: unknown;
   try {
     body = await req.json();
@@ -23,6 +24,15 @@ export async function POST(req: NextRequest) {
   }
 
   const { token, email, password } = parsed.data;
+
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    return NextResponse.json(
+      { error: "An account already exists for this email" },
+      { status: 409 },
+    );
+  }
+
   const tokenHash = hashInviteToken(token);
   const now = new Date();
 
@@ -86,4 +96,4 @@ export async function POST(req: NextRequest) {
     book: invitation.book,
   });
   return setSessionCookie(response, sessionToken);
-}
+});

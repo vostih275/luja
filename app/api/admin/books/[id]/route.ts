@@ -7,6 +7,7 @@ import { resolveSafeBookPath } from "@/lib/storage";
 import { isCloudinaryEnabled, deleteBookAsset } from "@/lib/cloudinary";
 import { getClientIp } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
+import { apiHandlerWithParams } from "@/lib/api";
 
 async function requireAdminResponse(req: NextRequest) {
   const user = await getCurrentUser(req);
@@ -19,7 +20,7 @@ async function requireAdminResponse(req: NextRequest) {
   return user;
 }
 
-export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const PUT = apiHandlerWithParams(async (req: NextRequest, { params }) => {
   const admin = await requireAdminResponse(req);
   if (admin instanceof NextResponse) return admin;
   const { id } = await params;
@@ -58,9 +59,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   });
 
   return NextResponse.json({ book });
-}
+});
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const DELETE = apiHandlerWithParams(async (req: NextRequest, { params }) => {
   const admin = await requireAdminResponse(req);
   if (admin instanceof NextResponse) return admin;
   const { id } = await params;
@@ -73,11 +74,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   try {
     if (isCloudinaryEnabled()) {
       await deleteBookAsset(book.fileStorageKey, "raw");
+      if (book.coverImagePublicId) {
+        await deleteBookAsset(book.coverImagePublicId, "image");
+      }
     } else {
       await fs.unlink(resolveSafeBookPath(book.fileStorageKey));
     }
-  } catch {
+  } catch (err) {
     // Asset may already be gone; cascade DB delete is the authoritative action.
+    console.error("Storage cleanup error:", err);
   }
 
   await prisma.book.delete({ where: { id } });
@@ -90,4 +95,4 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   });
 
   return NextResponse.json({ ok: true });
-}
+});

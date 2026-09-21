@@ -5,6 +5,7 @@ import { accessGrantSchema } from "@/lib/validation";
 import { generateInviteToken, hashInviteToken, addDays } from "@/lib/invitations";
 import { getClientIp } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
+import { apiHandler } from "@/lib/api";
 
 async function requireAdminResponse(req: NextRequest) {
   const user = await getCurrentUser(req);
@@ -17,7 +18,7 @@ async function requireAdminResponse(req: NextRequest) {
   return user;
 }
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const admin = await requireAdminResponse(req);
   if (admin instanceof NextResponse) return admin;
 
@@ -91,4 +92,4 @@ export async function POST(req: NextRequest) {
     inviteToken: rawToken,
     expiresAt: invitation.expiresAt.toISOString(),
   });
-}
+});
